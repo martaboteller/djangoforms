@@ -1,0 +1,56 @@
+{% extends 'pizza/base.html' %} {% block 'body' %} {% load widget_tweaks %}
+
+<div class="container">
+  <h1>Order a pizza</h1>
+
+  <h2>{{note}}</h2>
+
+  {% if created_pizza_pk %}
+  <a href="{% url 'edit_order' created_pizza_pk %}">Edit Your Order</a>
+  {% endif %}
+
+  <!--Action is where you want to send the values-->
+  <!--Method: get if the state is not changing, post if it is changings-->
+  <!-- enctype="multipart/form-data" -->
+  <!--Can add novalidate inside <form..>-->
+  <form action="{% url 'order' %}" method="POST">
+    <!--cross site scripting protection-->
+    <!-- as_p display the form as paragragh one below other-->
+    <!-- other style ways as_table as_ul as_ol -->
+    {% csrf_token %} {% for field in pizzaform %}
+    <div
+      class="form-group {% if field.errors %} alert alert-danger {% endif %}"
+    >
+      {{ field.errors }} {{ field.label_tag }} {{ field}}
+    </div>
+    {% endfor %}
+    <!-- <label for="{{pizzaform.size.iud_for_label}}"> Size for your pizza: </label>
+  {{pizzaform.size}} {{pizzaform.size.errors}} -->
+
+    <input type="submit" value="Order Pizza" />
+  </form>
+
+  <br /><br />
+
+  Want more than one pizza?
+
+  <form action="{% url 'pizzas' %}" method="GET">
+    {% csrf_token %} {{ multiple_form }}
+    <input type="submit" value="Get Pizzas" />
+  </form>
+</div>
+<!-- for has to be the id of the input
+  <label for="topping1">Topping 1:</label>
+  <input id="topping1" type="text" name="topping1" />
+
+  <label for="topping2">Topping 2:</label>
+  <input id="topping2" type="text" name="topping2" />
+
+  <label for="size">Size:</label>
+  <select id="size" name="size">
+    <option value="small">Small</option>
+    <option value="medium">Medium</option>
+    <option value="large">Large</option>
+  </select> -->
+
+{% endblock %}
